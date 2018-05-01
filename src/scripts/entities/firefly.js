@@ -46,7 +46,7 @@ class Firefly {
   }
 
   move() {
-    let distHeroThreshold = 1;
+    let distHeroThreshold = 1.5;
     let distToHeroA = this.mesh.position.distanceTo(this.game.heroA.mesh.position);
     let distToHeroB = this.mesh.position.distanceTo(this.game.heroB.mesh.position);
     let refHero = this.game.heroA;
@@ -60,7 +60,7 @@ class Firefly {
       let dz = this.mesh.position.z - refHero.mesh.position.z;
       let dx = this.mesh.position.x - refHero.mesh.position.x;
       this.angle = Math.atan2(dz, dx) + Math.PI;
-      this.velocity = 0.05 * (distHeroThreshold - refDist);
+      this.velocity = 0.1 * (distHeroThreshold - refDist);
     } else {
       this.velocity = this.calc.map(Math.sin(Date.now() * 0.0025 + this.pulseOffset), -1, 1, this.velocityBase * 0.25, this.velocityBase);
       this.angle += this.calc.rand(-0.5, 0.5);
