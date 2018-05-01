@@ -100,14 +100,27 @@ class BaseLevel {
 
     this.walls2.forEach((wall) => {
       let mesh = new THREE.Mesh(new THREE.BoxBufferGeometry(wall.width, 1, 1), this.game.wallMaterial);
-      mesh.castShadow = true;
-      mesh.receiveShadow = true;
+      //mesh.castShadow = true;
+      //mesh.receiveShadow = true;
       mesh.position.set(wall.x + 0.5, 0.5, wall.z + 0.5);
       mesh.bbox = new THREE.Box3();
       mesh.bbox.setFromObject(mesh);
       this.walls.push(mesh);
-      this.game.world.scene.add(mesh);
+      //this.game.world.scene.add(mesh);
     });
+
+    let comboGeo = new THREE.Geometry();
+
+    this.walls2.forEach((wall) => {
+      let newGeo = new THREE.BoxGeometry(wall.width, 1, 1);
+      newGeo.translate(wall.x + 0.5, 0.5, wall.z + 0.5);
+      comboGeo.merge(newGeo);
+    });
+
+    let mesh = new THREE.Mesh(comboGeo, this.game.wallMaterial);
+    mesh.castShadow = true;
+    mesh.receiveShadow = true;
+    this.game.world.scene.add(mesh);
   }
 
   setupHeros() {

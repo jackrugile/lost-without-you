@@ -184,8 +184,9 @@ class World {
     if(this.game.stateManager.current != 'play') {
       return;
     }
-    //this.renderer.render(this.scene, this.camera);
-    this.composer.render(0.00001);
+    this.renderer.render(this.scene, this.camera);
+    //this.composer.render(0.00001);
+    console.log(this.renderer.info.render.calls);
   }
 
   onGameResize(e) {
