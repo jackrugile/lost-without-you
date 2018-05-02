@@ -18,7 +18,9 @@ gulp.task("server", function() {
     },
     files: [
       config.dev + "/css/**/*.css",
-      config.dev + "/scripts/**/*.js"],
+      config.dev + "/scripts/**/*.js",
+      config.dev + "/**/*.html"
+    ],
     port: config.port,
     open: false,
     ghostMode: false
