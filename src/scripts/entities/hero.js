@@ -278,7 +278,7 @@ class Hero {
     if(this.isActive && this.game.isPlaying && !this.game.isEnding) {
       if(this.life > 0) {
         this.life -= this.decay;
-        this.lightDistanceTarget = 0 + this.lightDistanceBase * this.life;
+        this.lightDistanceTarget = 1 + this.lightDistanceBase * this.life;
         this.lightDistanceCurrent += (this.lightDistanceTarget - this.lightDistanceCurrent) * 0.2;
         this.light1.distance = this.lightDistanceCurrent;
         this.light2.distance = this.lightDistanceCurrent;
