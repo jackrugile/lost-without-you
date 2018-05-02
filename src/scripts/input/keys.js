@@ -24,32 +24,32 @@ class Keys {
   onKeydown(e) {
     let key = e.which;
     if(this.keyWatch.up.indexOf(key) > -1) {
-      this.env.eventful.trigger('dir-pressed', { dir: 'up' });
+      this.env.eventful.trigger('key-pressed', { input: 'up' });
     }
     if(this.keyWatch.down.indexOf(key) > -1) {
-      this.env.eventful.trigger('dir-pressed', { dir: 'down' });
+      this.env.eventful.trigger('key-pressed', { input: 'down' });
     }
     if(this.keyWatch.left.indexOf(key) > -1) {
-      this.env.eventful.trigger('dir-pressed', { dir: 'left' });
+      this.env.eventful.trigger('key-pressed', { input: 'left' });
     }
     if(this.keyWatch.right.indexOf(key) > -1) {
-      this.env.eventful.trigger('dir-pressed', { dir: 'right' });
+      this.env.eventful.trigger('key-pressed', { input: 'right' });
     }
   }
 
   onKeyup(e) {
     let key = e.which;
     if(this.keyWatch.up.indexOf(key) > -1) {
-      this.env.eventful.trigger('dir-released', { dir: 'up' });
+      this.env.eventful.trigger('key-released', { input: 'up' });
     }
     if(this.keyWatch.down.indexOf(key) > -1) {
-      this.env.eventful.trigger('dir-released', { dir: 'down' });
+      this.env.eventful.trigger('key-released', { input: 'down' });
     }
     if(this.keyWatch.left.indexOf(key) > -1) {
-      this.env.eventful.trigger('dir-released', { dir: 'left' });
+      this.env.eventful.trigger('key-released', { input: 'left' });
     }
     if(this.keyWatch.right.indexOf(key) > -1) {
-      this.env.eventful.trigger('dir-released', { dir: 'right' });
+      this.env.eventful.trigger('key-released', { input: 'right' });
     }
   }
 

@@ -44,7 +44,7 @@ class Hero {
   }
 
   observe() {
-    this.env.eventful.on('game-animate', (e) => this.update(e));
+    this.env.eventful.on('game-update', (e) => this.update(e));
   }
 
   setupMesh() {
@@ -119,9 +119,9 @@ class Hero {
     this.colliding.right = false;
 
     if(this.isActive && this.game.isPlaying && !this.game.isEnding) {
-      if(this.game.dir.left && !this.colliding.left) {
+      if(this.game.input.left.pressed && !this.colliding.left) {
         this.acceleration.x = -this.accelerationGain;
-      } else if(this.game.dir.right && !this.colliding.right) {
+      } else if(this.game.input.right.pressed && !this.colliding.right) {
         this.acceleration.x = this.accelerationGain;
       } else {
         this.acceleration.x = 0;
@@ -156,9 +156,9 @@ class Hero {
     }
 
     if(this.isActive && this.game.isPlaying && !this.game.isEnding) {
-      if(this.game.dir.up && !this.colliding.up) {
+      if(this.game.input.up.pressed && !this.colliding.up) {
         this.acceleration.z = -this.accelerationGain;
-      } else if(this.game.dir.down && !this.colliding.down) {
+      } else if(this.game.input.down.pressed && !this.colliding.down) {
         this.acceleration.z = this.accelerationGain;
       } else {
         this.acceleration.z = 0;

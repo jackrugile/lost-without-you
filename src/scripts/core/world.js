@@ -34,7 +34,7 @@ class World {
 
   observe() {
     this.env.eventful.on('game-resize', (e) => this.onGameResize(e));
-    this.env.eventful.on('game-animate', () => this.onGameAnimate());
+    this.env.eventful.on('game-update', () => this.onGameAnimate());
     this.env.eventful.on('collect-firefly', () => this.smallFlash());
     this.env.eventful.on('end-tick', (e) => this.endTick(e));
     this.env.eventful.on('play-reset', () => this.playReset());
@@ -184,9 +184,9 @@ class World {
     if(this.game.stateManager.current != 'play') {
       return;
     }
-    this.renderer.render(this.scene, this.camera);
-    //this.composer.render(0.00001);
-    console.log(this.renderer.info.render.calls);
+    //this.renderer.render(this.scene, this.camera);
+    this.composer.render(0.00001);
+    //console.log(this.renderer.info.render.calls);
   }
 
   onGameResize(e) {

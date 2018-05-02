@@ -17,7 +17,7 @@ class Time {
   }
 
   observe() {
-    this.env.eventful.on('game-animate', (e) => this.update(e));
+    this.env.eventful.on('game-update', (e) => this.update(e));
   }
 
   update() {

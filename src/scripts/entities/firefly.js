@@ -27,7 +27,7 @@ class Firefly {
   }
 
   observe() {
-    this.env.eventful.on('game-animate', (e) => this.update(e));
+    this.env.eventful.on('game-update', (e) => this.update(e));
   }
 
   setupMesh() {

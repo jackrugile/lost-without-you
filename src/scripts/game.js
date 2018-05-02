@@ -1,6 +1,7 @@
 const env = require('./env.js');
 const Calc = require('./utils/calc');
 const Ease = require('./utils/ease');
+const Gamepad = require('./input/gamepad');
 const Keys = require('./input/keys');
 const LevelManager = require('./level/manager');
 const StateManager = require('./state/manager');
@@ -147,12 +148,26 @@ class Game {
   }
 
   setupInputs() {
+    this.gamepad = new Gamepad();
     this.keys = new Keys();
-    this.dir = {
-      up: false,
-      down: false,
-      left: false,
-      right: false
+
+    this.input = {
+      up: {
+        pressed: false,
+        pressedOnce: false
+      },
+      down: {
+        pressed: false,
+        pressedOnce: false
+      },
+      left: {
+        pressed: false,
+        pressedOnce: false
+      },
+      right: {
+        pressed: false,
+        pressedOnce: false
+      }
     };
   }
 
@@ -216,8 +231,10 @@ class Game {
   observe() {
     window.addEventListener('resize', () => this.onResize());
 
-    this.env.eventful.on('dir-pressed', (e) => this.onDirPressed(e));
-    this.env.eventful.on('dir-released', (e) => this.onDirReleased(e));
+    this.env.eventful.on('key-pressed', (e) => this.onInputPressed(e));
+    this.env.eventful.on('key-released', (e) => this.onInputReleased(e));
+    this.env.eventful.on('gamepad-button-pressed', (e) => this.onInputPressed(e));
+    this.env.eventful.on('gamepad-button-released', (e) => this.onInputReleased(e));
   }
 
   onResize() {
@@ -259,12 +276,17 @@ class Game {
     });
   }
 
-  onDirPressed(e) {
-    this.dir[e.dir] = true;
+  onInputPressed(e) {
+    if(!this.input[e.input].pressed) {
+      this.input[e.input].pressedOnce = true;
+      this.input[e.input].pressed = true;
+    }
   }
 
-  onDirReleased(e) {
-    this.dir[e.dir] = false;
+  onInputReleased(e) {
+    if(this.input[e.input].pressed) {
+      this.input[e.input].pressed = false;
+    }
   }
 
   start() {
@@ -275,12 +297,26 @@ class Game {
     window.cancelAnimationFrame(this.raf);
   }
 
+  preUpdate() {
+    this.env.eventful.trigger('game-pre-update');
+  }
+
   update() {
+    this.env.eventful.trigger('game-update');
+  }
+
+  postUpdate() {
+    this.env.eventful.trigger('game-post-update');
+    this.input.up.pressedOnce = false;
+    this.input.down.pressedOnce = false;
+    this.input.left.pressedOnce = false;
+    this.input.right.pressedOnce = false;
   }
 
   animate() {
+    this.preUpdate();
     this.update();
-    this.env.eventful.trigger('game-animate');
+    this.postUpdate();
     this.raf = window.requestAnimationFrame(() => this.animate());
   }
 
