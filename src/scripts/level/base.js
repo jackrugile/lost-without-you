@@ -1,4 +1,5 @@
 const env = require('../env.js');
+const Calc = require('../utils/calc');
 const Firefly = require('../entities/firefly');
 const Hero = require('../entities/hero');
 
@@ -6,6 +7,7 @@ class BaseLevel {
 
   constructor(game, name) {
     this.env = env;
+    this.calc = new Calc();
     this.game = game;
     this.name = name;
     this.observe();
@@ -66,18 +68,18 @@ class BaseLevel {
     this.mazeArray.forEach((line, i) => {
       let currWall = {};
       let hasWall = false;
-      //let wallWidth = 1;
       line.forEach((item, j) => {
         if(item === 3) {
           if(hasWall) {
-            //wallWidth++
             currWall.width++;
             currWall.x += 0.5;
           } else {
             currWall = {
               x: j - this.mazeCols / 2,
               z: i - this.mazeRows / 2,
-              width: 1
+              width: 1,
+              height: 1,
+              depth: 1
             };
             hasWall = true;
             this.walls2.push(currWall);
@@ -88,11 +90,37 @@ class BaseLevel {
       });
     });
 
+    // this reverts back to single cubes for testing heights
+    // this.mazeArray.forEach((line, i) => {
+    //   let currWall = {};
+    //   let hasWall = false;
+    //   line.forEach((item, j) => {
+    //     if(item === 3) {
+    //       if(hasWall) {
+    //         currWall.width++;
+    //         currWall.x += 0.5;
+    //       } else {
+    //         currWall = {
+    //           x: j - this.mazeCols / 2,
+    //           z: i - this.mazeRows / 2,
+    //           width: 1,
+    //           height: this.calc.rand(0.5, 1),
+    //           depth: 1
+    //         };
+    //         //hasWall = true;
+    //         this.walls2.push(currWall);
+    //       }
+    //     } else {
+    //       hasWall = false;
+    //     }
+    //   });
+    // });
+
     this.walls2.forEach((wall) => {
-      let mesh = new THREE.Mesh(new THREE.BoxBufferGeometry(wall.width, 1, 1), this.game.wallMaterial);
+      let mesh = new THREE.Mesh(new THREE.BoxBufferGeometry(wall.width, wall.height, wall.depth), this.game.wallMaterial);
       mesh.castShadow = true;
       mesh.receiveShadow = true;
-      mesh.position.set(wall.x + 0.5, 0.5, wall.z + 0.5);
+      mesh.position.set(wall.x + 0.5, wall.height / 2, wall.z + 0.5);
       mesh.bbox = new THREE.Box3();
       mesh.bbox.setFromObject(mesh);
       this.walls.push(mesh);

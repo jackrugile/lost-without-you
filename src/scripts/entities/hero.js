@@ -19,7 +19,6 @@ class Hero {
 
     this.life = 1;
     this.decay = 0.00175;
-    //this.decay = 0;
 
     this.acceleration = new THREE.Vector3();
     this.velocity = new THREE.Vector3();
