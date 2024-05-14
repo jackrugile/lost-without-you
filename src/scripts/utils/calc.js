@@ -1,5 +1,4 @@
 class Calc {
-
   /*
   ------------------------------------------
   | rand:float - returns random float
@@ -12,12 +11,12 @@ class Calc {
   | with the option of easing bias.
   ------------------------------------------ */
   rand(min, max, ease) {
-    if(max === undefined) {
+    if (max === undefined) {
       max = min;
       min = 0;
     }
     let random = Math.random();
-    if(ease) {
+    if (ease) {
       random = ease(random, 0, 1, 1);
     }
     return random * (max - min) + min;
@@ -35,12 +34,12 @@ class Calc {
   | with the option of easing bias.
   ------------------------------------------ */
   randInt(min, max, ease) {
-    if(max === undefined) {
+    if (max === undefined) {
       max = min;
       min = 0;
     }
     let random = Math.random();
-    if(ease) {
+    if (ease) {
       random = ease(random, 0, 1, 1);
     }
     return Math.floor(random * (max - min + 1)) + min;
@@ -72,7 +71,10 @@ class Calc {
   | to an output min/max.
   ------------------------------------------ */
   map(val, inputMin, inputMax, outputMin, outputMax) {
-    return ((outputMax - outputMin) * ((val - inputMin) / (inputMax - inputMin))) + outputMin;
+    return (
+      (outputMax - outputMin) * ((val - inputMin) / (inputMax - inputMin)) +
+      outputMin
+    );
   }
 
   /*
@@ -103,7 +105,7 @@ class Calc {
   | Round up a value to the next highest interval.
   ------------------------------------------ */
   roundToUpperInterval(value, interval) {
-    if(value % interval === 0) {
+    if (value % interval === 0) {
       value += 0.0001;
     }
     return Math.ceil(value / interval) * interval;
@@ -119,7 +121,7 @@ class Calc {
   | Round down a value to the next lowest interval.
   ------------------------------------------ */
   roundToLowerInterval(value, interval) {
-    if(value % interval === 0) {
+    if (value % interval === 0) {
       value -= 0.0001;
     }
     return Math.floor(value / interval) * interval;
@@ -151,10 +153,10 @@ class Calc {
   intersectSphere(a, b) {
     let distance = Math.sqrt(
       (a.x - b.x) * (a.x - b.x) +
-      (a.y - b.y) * (a.y - b.y) +
-      (a.z - b.z) * (a.z - b.z)
+        (a.y - b.y) * (a.y - b.y) +
+        (a.z - b.z) * (a.z - b.z)
     );
-    return distance < (a.radius + b.radius);
+    return distance < a.radius + b.radius;
   }
 
   /*
@@ -168,7 +170,7 @@ class Calc {
   | Convert from grid coords to index.
   ------------------------------------------ */
   getIndexFromCoords(x, y, w) {
-    return x + (y * w);
+    return x + y * w;
   }
 
   /*
@@ -183,10 +185,9 @@ class Calc {
   getCoordsFromIndex(i, w) {
     return {
       x: i % w,
-      y: Math.floor(i / w)
+      y: Math.floor(i / w),
     };
   }
-
 }
 
-module.exports = Calc;
+export default Calc;

@@ -1,20 +1,19 @@
-const env = require('../env.js');
+// import env from "../env.js";
 
 class StorageManager {
-
   constructor(namespace) {
-    this.env = env;
+    // this.env = env;
 
-    Storage.prototype.setObject = function(key, value) {
+    Storage.prototype.setObject = function (key, value) {
       this.setItem(key, JSON.stringify(value));
     };
 
-    Storage.prototype.getObject = function(key) {
+    Storage.prototype.getObject = function (key) {
       let value = this.getItem(key);
       return value && JSON.parse(value);
     };
 
-    Storage.prototype.removeObject = function(key) {
+    Storage.prototype.removeObject = function (key) {
       this.removeItem(key);
     };
 
@@ -39,7 +38,6 @@ class StorageManager {
     this.obj = {};
     this.sync();
   }
-
 }
 
-module.exports = StorageManager;
+export default StorageManager;

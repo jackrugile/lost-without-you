@@ -1,7 +1,7 @@
-const Eventful = require('./utils/eventful');
-const StorageManager = require('./utils/storage');
+import Eventful from "./utils/eventful";
+import StorageManager from "./utils/storage";
 
-module.exports = {
+export default {
   eventful: new Eventful(),
-  storage: new StorageManager('lost-without-you')
+  storage: new StorageManager("lost-without-you"),
 };

@@ -1,21 +1,23 @@
-const env = require('../env.js');
+import env from "../env.js";
 
-require('three/examples/js/controls/OrbitControls.js');
-require('three/examples/js/postprocessing/EffectComposer');
-require('three/examples/js/postprocessing/ShaderPass');
-require('three/examples/js/postprocessing/FilmPass.js');
-require('three/examples/js/postprocessing/RenderPass');
-require('three/examples/js/postprocessing/MaskPass');
-require('three/examples/js/shaders/CopyShader');
-require('three/examples/js/shaders/FilmShader.js');
-require('three/examples/js/shaders/BrightnessContrastShader.js');
-require('three/examples/js/shaders/ConvolutionShader');
-require('three/examples/js/shaders/LuminosityHighPassShader');
-require('three/examples/js/shaders/RGBShiftShader');
-require('three/examples/js/postprocessing/UnrealBloomPass');
+import * as THREE from "three";
+
+import { EffectComposer } from "three/examples/jsm/postprocessing/EffectComposer";
+import { RenderPass } from "three/examples/jsm/postprocessing/RenderPass";
+import { ShaderPass } from "three/examples/jsm/postprocessing/ShaderPass";
+import { BrightnessContrastShader } from "three/examples/jsm/shaders/BrightnessContrastShader.js";
+import { RGBShiftShader } from "three/examples/jsm/shaders/RGBShiftShader";
+import { UnrealBloomPass } from "three/examples/jsm/postprocessing/UnrealBloomPass";
+import { FilmPass } from "three/examples/jsm/postprocessing/FilmPass.js";
+
+// require("three/examples/js/controls/OrbitControls.js");
+// require("three/examples/js/postprocessing/MaskPass");
+// require("three/examples/js/shaders/CopyShader");
+// require("three/examples/js/shaders/FilmShader.js");
+// require("three/examples/js/shaders/ConvolutionShader");
+// require("three/examples/js/shaders/LuminosityHighPassShader");
 
 class World {
-
   constructor(init) {
     this.env = env;
 
@@ -33,11 +35,11 @@ class World {
   }
 
   observe() {
-    this.env.eventful.on('game-resize', (e) => this.onGameResize(e));
-    this.env.eventful.on('game-update', () => this.onGameAnimate());
-    this.env.eventful.on('collect-firefly', () => this.smallFlash());
-    this.env.eventful.on('end-tick', (e) => this.endTick(e));
-    this.env.eventful.on('play-reset', () => this.playReset());
+    this.env.eventful.on("game-resize", (e) => this.onGameResize(e));
+    this.env.eventful.on("game-update", () => this.onGameAnimate());
+    this.env.eventful.on("collect-firefly", () => this.smallFlash());
+    this.env.eventful.on("end-tick", (e) => this.endTick(e));
+    this.env.eventful.on("play-reset", () => this.playReset());
   }
 
   smallFlash() {
@@ -70,16 +72,15 @@ class World {
 
   setupScene() {
     this.scene = new THREE.Scene();
-    this.scene.background = new THREE.Color('hsl(0, 0%, 3%)');
+    this.scene.background = new THREE.Color("hsl(0, 0%, 3%)");
   }
 
-  setupLights() {
-  }
+  setupLights() {}
 
   setupRenderer() {
     this.renderer = new THREE.WebGLRenderer({
       //antialias: true,
-      precision: 'highp'
+      precision: "highp",
     });
     this.renderer.autoClear = false;
     this.renderer.shadowMap.enabled = true;
@@ -103,28 +104,28 @@ class World {
   }
 
   setupComposer() {
-    this.composer = new THREE.EffectComposer(this.renderer);
+    this.composer = new EffectComposer(this.renderer);
 
-    this.renderPass = new THREE.RenderPass(this.scene, this.camera);
+    this.renderPass = new RenderPass(this.scene, this.camera);
     this.renderPass.renderToScreen = false;
     //this.renderPass.clear = false;
     //this.renderPass.clearDepth = true;
     this.composer.addPass(this.renderPass);
 
-    this.brightnessPass = new THREE.ShaderPass(THREE.BrightnessContrastShader);
+    this.brightnessPass = new ShaderPass(BrightnessContrastShader);
     this.brightnessValue = 0;
-    this.brightnessPass.uniforms['brightness'].value = 0;
-    this.brightnessPass.uniforms['contrast'].value = 0;
+    this.brightnessPass.uniforms["brightness"].value = 0;
+    this.brightnessPass.uniforms["contrast"].value = 0;
     this.brightnessPass.renderToScreen = false;
     this.composer.addPass(this.brightnessPass);
 
-    this.rgbPass = new THREE.ShaderPass(THREE.RGBShiftShader);
-    this.rgbPass.uniforms['amount'].value = 0;
-    this.rgbPass.uniforms['angle'].value = 0;
+    this.rgbPass = new ShaderPass(RGBShiftShader);
+    this.rgbPass.uniforms["amount"].value = 0;
+    this.rgbPass.uniforms["angle"].value = 0;
     this.rgbPass.renderToScreen = false;
     this.composer.addPass(this.rgbPass);
 
-    this.bloomPass = new THREE.UnrealBloomPass(
+    this.bloomPass = new UnrealBloomPass(
       new THREE.Vector2(window.innerWidth, window.innerHeight), // resolution
       0.75, // strength
       0.5, // radius
@@ -134,7 +135,7 @@ class World {
     this.composer.addPass(this.bloomPass);
 
     // noiseIntensity, scanlinesIntensity, scanlinesCount, grayscale
-    this.filmPass = new THREE.FilmPass(0.15, 0.5, 2048, false);
+    this.filmPass = new FilmPass(0.15, 0.5, 2048, false);
     this.filmPass.renderToScreen = true;
     this.composer.addPass(this.filmPass);
   }
@@ -148,7 +149,7 @@ class World {
 
   update() {
     //this.orbit.update();
-    if(this.game.activeHero && this.game.stateManager.current === 'play') {
+    if (this.game.activeHero && this.game.stateManager.current === "play") {
       this.cameraTarget.copy(this.game.activeHero.mesh.position);
       //this.cameraTarget.y = 3;
       this.cameraTarget.y = this.cameraLift;
@@ -163,25 +164,26 @@ class World {
       this.camera.lookAt(this.cameraLookAtCurrent);
     }
 
-    this.rgbPass.uniforms['amount'].value = 0.0008 + Math.sin(Date.now() * 0.003) * 0.0008;
-    this.rgbPass.uniforms['angle'].value -= 0.1;
+    this.rgbPass.uniforms["amount"].value =
+      0.0008 + Math.sin(Date.now() * 0.003) * 0.0008;
+    this.rgbPass.uniforms["angle"].value -= 0.1;
     //this.bloomPass.strength = 0.5 + Math.sin(Date.now() * 0.003) * 0.5;
     //this.bloomPass.radius = 1 + Math.sin(Date.now() * 0.003) * 1;
     //this.bloomPass.radius = 0.5 - Math.sin(Date.now() * 0.003) * 0.25;
 
-    if(!this.game.isEnding) {
-      if(this.brightnessValue > 0) {
+    if (!this.game.isEnding) {
+      if (this.brightnessValue > 0) {
         this.brightnessValue -= 0.001;
-        if(this.brightnessValue < 0) {
+        if (this.brightnessValue < 0) {
           this.brightnessValue = 0;
         }
       }
     }
-    this.brightnessPass.uniforms['brightness'].value = this.brightnessValue;
+    this.brightnessPass.uniforms["brightness"].value = this.brightnessValue;
   }
 
   render() {
-    if(this.game.stateManager.current != 'play') {
+    if (this.game.stateManager.current != "play") {
       return;
     }
     //this.renderer.render(this.scene, this.camera);
@@ -204,7 +206,6 @@ class World {
     this.update();
     this.render();
   }
-
 }
 
-module.exports = World;
+export default World;

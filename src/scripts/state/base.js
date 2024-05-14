@@ -1,8 +1,7 @@
-const env = require('../env.js');
-const Utils = require('../utils/utils');
+import env from "../env.js";
+import Utils from "../utils/utils";
 
 class BaseState {
-
   constructor(game, name) {
     this.env = env;
     this.utils = new Utils();
@@ -18,28 +17,27 @@ class BaseState {
   }
 
   observe() {
-    this.env.eventful.on('game-update', (e) => this.update(e));
+    this.env.eventful.on("game-update", (e) => this.update(e));
   }
 
   activate() {
     this.isActive = true;
     this.game.currentState = this;
-    this.dom.state.classList.add('state-active');
+    this.dom.state.classList.add("state-active");
     this.env.eventful.trigger(`${this.name}-state-activate`);
   }
 
   deactivate() {
     this.isActive = false;
-    this.dom.state.classList.remove('state-active');
+    this.dom.state.classList.remove("state-active");
     this.env.eventful.trigger(`${this.name}-state-deactivate`);
   }
 
   update() {
-    if(!this.isActive) {
+    if (!this.isActive) {
       return;
     }
   }
-
 }
 
-module.exports = BaseState;
+export default BaseState;

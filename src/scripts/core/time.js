@@ -1,7 +1,8 @@
-const env = require('../env.js');
+import env from "../env.js";
+
+import * as THREE from "three";
 
 class Time {
-
   constructor(game) {
     this.env = env;
     this.game = game;
@@ -17,7 +18,7 @@ class Time {
   }
 
   observe() {
-    this.env.eventful.on('game-update', (e) => this.update(e));
+    this.env.eventful.on("game-update", (e) => this.update(e));
   }
 
   update() {
@@ -27,7 +28,6 @@ class Time {
     this.dtn = this.dtm / (1000 / 60);
     this.em += this.dtm;
   }
-
 }
 
-module.exports = Time;
+export default Time;

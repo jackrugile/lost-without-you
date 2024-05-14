@@ -1,5 +1,4 @@
 class Eventful {
-
   /*
   ------------------------------------------
   | constructor:void
@@ -19,8 +18,8 @@ class Eventful {
   | Validate event type.
   ------------------------------------------ */
   validateEventType(type) {
-    if((/^[a-z\-_]+$/g).test(type) === false) {
-      throw 'Error: type type must be a string (a-z, -, _)!';
+    if (/^[a-z\-_]+$/g.test(type) === false) {
+      throw "Error: type type must be a string (a-z, -, _)!";
     }
   }
 
@@ -33,8 +32,8 @@ class Eventful {
   | Validate event callback.
   ------------------------------------------ */
   validateEventCallback(cb) {
-    if(typeof(cb) !== 'function') {
-      throw 'Error: callback must be a function!';
+    if (typeof cb !== "function") {
+      throw "Error: callback must be a function!";
     }
   }
 
@@ -65,7 +64,7 @@ class Eventful {
     this.validateEventCallback(cb);
 
     // add type if it doesn't exist
-    if(this.eventTypeExists(type) === false) {
+    if (this.eventTypeExists(type) === false) {
       this._events[type] = [];
     }
 
@@ -92,12 +91,12 @@ class Eventful {
     this.validateEventType(type);
 
     // are there any events with this type?
-    if(this.eventTypeExists(type) === false) {
+    if (this.eventTypeExists(type) === false) {
       return this;
     }
 
     // if no cb was specfied, remove them all
-    if(args.length === 0) {
+    if (args.length === 0) {
       this._events[type] = [];
       return this;
     }
@@ -107,7 +106,7 @@ class Eventful {
 
     // are there any listeners?
     index = this._events[type].indexOf(args[0]);
-    if(index !== -1) {
+    if (index !== -1) {
       setTimeout(() => {
         this._events[type].splice(index, 1);
       }, 0);
@@ -130,12 +129,12 @@ class Eventful {
     // check type / data
     this.validateEventType(type);
 
-    if(typeof(data) !== 'object') {
-      throw 'Error: data must be an object!';
+    if (typeof data !== "object") {
+      throw "Error: data must be an object!";
     }
 
     // are there any listeners?
-    if(this.eventTypeExists(type) === false) {
+    if (this.eventTypeExists(type) === false) {
       return this;
     }
 
@@ -152,4 +151,4 @@ class Eventful {
   }
 }
 
-module.exports = Eventful;
+export default Eventful;

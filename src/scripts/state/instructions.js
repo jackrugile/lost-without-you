@@ -1,7 +1,6 @@
-const BaseState = require('./base');
+import BaseState from "./base";
 
 class InstructionsState extends BaseState {
-
   constructor(game, name) {
     super(game, name);
   }
@@ -12,12 +11,12 @@ class InstructionsState extends BaseState {
 
   observe() {
     super.observe();
-    this.dom.state.addEventListener('click', (e) => this.onClick(e));
+    this.dom.state.addEventListener("click", (e) => this.onClick(e));
   }
 
   onClick() {
     this.game.sounds.button.play();
-    this.game.stateManager.set('play');
+    this.game.stateManager.set("play");
   }
 
   activate() {
@@ -28,7 +27,7 @@ class InstructionsState extends BaseState {
 
   update() {
     super.update();
-    if(!this.isActive) {
+    if (!this.isActive) {
       return;
     }
     // this.tick++;
@@ -36,7 +35,6 @@ class InstructionsState extends BaseState {
     //   this.game.stateManager.set('play');
     // }
   }
-
 }
 
-module.exports = InstructionsState;
+export default InstructionsState;

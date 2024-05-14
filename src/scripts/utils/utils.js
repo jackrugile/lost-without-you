@@ -1,12 +1,10 @@
 class Utils {
-
-  constructor() {
-  }
+  constructor() {}
 
   pad(amount, digits) {
-    amount += '';
-    if(amount.length < digits) {
-      amount = '0' + amount;
+    amount += "";
+    if (amount.length < digits) {
+      amount = "0" + amount;
       return this.pad(amount, digits);
     } else {
       return amount;
@@ -19,9 +17,8 @@ class Utils {
     x /= 60;
     let minutes = parseInt(x % 60);
 
-    return minutes + ':' + this.pad(seconds, 2);
+    return minutes + ":" + this.pad(seconds, 2);
   }
-
 }
 
-module.exports = Utils;
+export default Utils;

@@ -1,8 +1,7 @@
-const BaseLevel = require('./base');
-const Level2Data = require('../data/level2.txt');
+import BaseLevel from "./base";
+import Level2Data from "../data/level2.txt?raw";
 
 class Level2 extends BaseLevel {
-
   constructor(game, name) {
     super(game, name);
 
@@ -12,7 +11,6 @@ class Level2 extends BaseLevel {
   update() {
     super.update();
   }
-
 }
 
-module.exports = Level2;
+export default Level2;
