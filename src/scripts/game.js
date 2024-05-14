@@ -248,6 +248,8 @@ class Game {
     this.env.eventful.on("gamepad-button-released", (e) =>
       this.onInputReleased(e)
     );
+
+    document.addEventListener("contextmenu", (e) => e.preventDefault());
   }
 
   onResize() {
