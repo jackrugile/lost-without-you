@@ -157,8 +157,24 @@ class World {
 
       this.cameraLookAtTarget.copy(this.game.activeHero.mesh.position);
 
-      this.cameraCurrent.lerp(this.cameraTarget, 0.15);
-      this.cameraLookAtCurrent.lerp(this.cameraLookAtTarget, 0.15);
+      let lerpVal = 1 - Math.exp(-0.15 * this.game.time.dtn);
+
+      this.cameraCurrent.lerp(this.cameraTarget, lerpVal);
+      this.cameraLookAtCurrent.lerp(this.cameraLookAtTarget, lerpVal);
+
+      // this.cameraCurrent.x +=
+      //   (this.cameraTarget.x - this.cameraCurrent.x) * lerpVal;
+      // this.cameraCurrent.y +=
+      //   (this.cameraTarget.y - this.cameraCurrent.y) * lerpVal;
+      // this.cameraCurrent.z +=
+      //   (this.cameraTarget.z - this.cameraCurrent.z) * lerpVal;
+
+      // this.cameraLookAtCurrent.x +=
+      //   (this.cameraLookAtTarget.x - this.cameraLookAtCurrent.x) * lerpVal;
+      // this.cameraLookAtCurrent.y +=
+      //   (this.cameraLookAtTarget.y - this.cameraLookAtCurrent.y) * lerpVal;
+      // this.cameraLookAtCurrent.z +=
+      //   (this.cameraLookAtTarget.z - this.cameraLookAtCurrent.z) * lerpVal;
 
       this.camera.position.copy(this.cameraCurrent);
       this.camera.lookAt(this.cameraLookAtCurrent);
@@ -166,14 +182,14 @@ class World {
 
     this.rgbPass.uniforms["amount"].value =
       0.0008 + Math.sin(Date.now() * 0.003) * 0.0008;
-    this.rgbPass.uniforms["angle"].value -= 0.1;
+    this.rgbPass.uniforms["angle"].value -= 0.1 * this.game.time.dtn;
     //this.bloomPass.strength = 0.5 + Math.sin(Date.now() * 0.003) * 0.5;
     //this.bloomPass.radius = 1 + Math.sin(Date.now() * 0.003) * 1;
     //this.bloomPass.radius = 0.5 - Math.sin(Date.now() * 0.003) * 0.25;
 
     if (!this.game.isEnding) {
       if (this.brightnessValue > 0) {
-        this.brightnessValue -= 0.001;
+        this.brightnessValue -= 0.001 * this.game.time.dtn;
         if (this.brightnessValue < 0) {
           this.brightnessValue = 0;
         }

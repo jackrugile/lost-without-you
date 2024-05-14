@@ -156,13 +156,16 @@ class Hero {
 
     if (!this.game.isEnding) {
       this.velocity.x += this.acceleration.x * this.game.time.dtn;
-      this.velocity.x *= this.velocityFriction;
+      // this.velocity.x *= this.velocityFriction;
+      this.velocity.x +=
+        (0 - this.velocity.x) *
+        (1 - Math.exp(-(1 - this.velocityFriction) * this.game.time.dtn));
       this.velocity.x = this.calc.clamp(
         this.velocity.x,
         -this.velocityMax,
         this.velocityMax
       );
-      this.mesh.position.x += this.velocity.x;
+      this.mesh.position.x += this.velocity.x * this.game.time.dtn;
       this.mesh.bbox.setFromObject(this.mesh);
     }
 
@@ -207,13 +210,16 @@ class Hero {
 
     if (!this.game.isEnding) {
       this.velocity.z += this.acceleration.z * this.game.time.dtn;
-      this.velocity.z *= this.velocityFriction;
+      // this.velocity.z *= this.velocityFriction;
+      this.velocity.z +=
+        (0 - this.velocity.z) *
+        (1 - Math.exp(-(1 - this.velocityFriction) * this.game.time.dtn));
       this.velocity.z = this.calc.clamp(
         this.velocity.z,
         -this.velocityMax,
         this.velocityMax
       );
-      this.mesh.position.z += this.velocity.z;
+      this.mesh.position.z += this.velocity.z * this.game.time.dtn;
       this.mesh.bbox.setFromObject(this.mesh);
     }
 
@@ -254,7 +260,8 @@ class Hero {
     this.lightPositionTarget.y = 1.2;
     this.lightPositionTarget.z = Math.sin(this.lightAngle) * this.lightDistance;
 
-    this.lightPositionCurrent.lerp(this.lightPositionTarget, 0.05);
+    let lerpVal = 1 - Math.exp(-0.05 * this.game.time.dtn);
+    this.lightPositionCurrent.lerp(this.lightPositionTarget, lerpVal);
 
     this.light1.position.copy(this.lightPositionCurrent);
     this.light2.position.copy(this.lightPositionCurrent);
@@ -338,7 +345,7 @@ class Hero {
   updateLightLife() {
     if (this.isActive && this.game.isPlaying && !this.game.isEnding) {
       if (this.life > 0) {
-        this.life -= this.decay;
+        this.life -= this.decay * this.game.time.dtn;
         this.lightDistanceTarget = 1 + this.lightDistanceBase * this.life;
         this.lightDistanceCurrent +=
           (this.lightDistanceTarget - this.lightDistanceCurrent) * 0.2;
@@ -409,7 +416,7 @@ class Hero {
     this.ghostMesh.position.copy(this.mesh.position);
 
     if (this.ghostOpacity > 0) {
-      this.ghostOpacity -= 0.015;
+      this.ghostOpacity -= 0.015 * this.game.time.dtn;
     }
     let eased = this.ease.inExpo(this.ghostOpacity, 0, 1, 1);
     this.ghostMaterial.opacity = eased;

@@ -213,12 +213,15 @@ class ParticleSystem {
             0.5 +
           0.5;
 
-        part.position.x += Math.sin(noise1 * Math.PI * 2) * noiseVelocity;
-        part.position.y += Math.sin(noise2 * Math.PI * 2) * noiseVelocity;
-        part.position.z += Math.sin(noise3 * Math.PI * 2) * noiseVelocity;
+        part.position.x +=
+          Math.sin(noise1 * Math.PI * 2) * noiseVelocity * this.game.time.dtn;
+        part.position.y +=
+          Math.sin(noise2 * Math.PI * 2) * noiseVelocity * this.game.time.dtn;
+        part.position.z +=
+          Math.sin(noise3 * Math.PI * 2) * noiseVelocity * this.game.time.dtn;
 
         if (part.life > 0) {
-          part.life -= part.decay * 1;
+          part.life -= part.decay * this.game.time.dtn;
         }
 
         if (part.life <= 0 || part.firstRun) {

@@ -245,7 +245,7 @@ class PlayState extends BaseState {
     }
 
     if (this.game.isEnding) {
-      this.endTick++;
+      this.endTick += this.game.time.dtn;
       this.env.eventful.trigger("end-tick", {
         prog: this.endTick / this.endTickMax,
       });
