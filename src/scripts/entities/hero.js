@@ -15,12 +15,12 @@ class Hero {
     this.origin = origin;
 
     this.isActive = false;
+    this.hasMoved = false;
 
     this.hue = this.name === "a" ? 130 : 210;
 
     this.life = 1;
     this.decay = 0.00175;
-    // this.decay = 0;
 
     this.acceleration = new THREE.Vector3();
     this.velocity = new THREE.Vector3();
@@ -105,7 +105,7 @@ class Hero {
 
   setupLights() {
     this.light1 = new THREE.PointLight(
-      new THREE.Color(`hsl(${this.hue}, 75%, 50%)`),
+      new THREE.Color(`hsl(${this.hue}, 75%, 55%)`),
       this.light1Intensity,
       this.lightDistanceBase,
       2
@@ -143,8 +143,10 @@ class Hero {
     if (this.isActive && this.game.isPlaying && !this.game.isEnding) {
       if (this.game.input.left.pressed && !this.colliding.left) {
         this.acceleration.x = -this.accelerationGain;
+        this.hasMoved = true;
       } else if (this.game.input.right.pressed && !this.colliding.right) {
         this.acceleration.x = this.accelerationGain;
+        this.hasMoved = true;
       } else {
         this.acceleration.x = 0;
       }
@@ -196,8 +198,10 @@ class Hero {
     if (this.isActive && this.game.isPlaying && !this.game.isEnding) {
       if (this.game.input.up.pressed && !this.colliding.up) {
         this.acceleration.z = -this.accelerationGain;
+        this.hasMoved = true;
       } else if (this.game.input.down.pressed && !this.colliding.down) {
         this.acceleration.z = this.accelerationGain;
+        this.hasMoved = true;
       } else {
         this.acceleration.z = 0;
       }
@@ -265,7 +269,12 @@ class Hero {
 
   setActive(active) {
     this.isActive = active;
-    if (!active) {
+    if (active) {
+      this.lifeMesh.visible = true;
+      this.lifeMeshBack.visible = true;
+    } else {
+      this.lifeMesh.visible = false;
+      this.lifeMeshBack.visible = false;
       this.acceleration.x = 0;
       this.acceleration.z = 0;
     }
@@ -408,7 +417,6 @@ class Hero {
     this.updateLightLife();
 
     this.particleSystem.update();
-    //this.particleSystem.particleGroup.position.copy(this.mesh.position);
 
     this.ghostMesh.position.copy(this.mesh.position);
 

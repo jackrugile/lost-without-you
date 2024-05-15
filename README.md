@@ -13,4 +13,4 @@ Made by Jack Rugile and Nicolle Rugile
 - Reunite Mary and Zoey before they run out of light.
 - Use **&uarr;&larr;&darr;&rarr;** or **WASD** to navigate.
 - Controls automatically alternate between friends.
-- Collect fireflies to boost your light.
+- Collect fireflies to boost their light.

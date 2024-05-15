@@ -67,7 +67,11 @@ class Firefly {
 
     this.collecting = false;
 
-    if (refDist < distHeroThreshold && this.game.isPlaying) {
+    if (
+      refDist < distHeroThreshold &&
+      this.game.isPlaying &&
+      refHero.hasMoved
+    ) {
       let dz = this.mesh.position.z - refHero.mesh.position.z;
       let dx = this.mesh.position.x - refHero.mesh.position.x;
       this.angle = Math.atan2(dz, dx) + Math.PI;

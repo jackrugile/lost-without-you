@@ -1,7 +1,7 @@
 import env from "../env.js";
+import Ease from "../utils/ease";
 
 import * as THREE from "three";
-
 import { EffectComposer } from "three/examples/jsm/postprocessing/EffectComposer";
 import { RenderPass } from "three/examples/jsm/postprocessing/RenderPass";
 import { ShaderPass } from "three/examples/jsm/postprocessing/ShaderPass";
@@ -9,19 +9,15 @@ import { BrightnessContrastShader } from "three/examples/jsm/shaders/BrightnessC
 import { RGBShiftShader } from "three/examples/jsm/shaders/RGBShiftShader";
 import { UnrealBloomPass } from "three/examples/jsm/postprocessing/UnrealBloomPass";
 import { FilmPass } from "three/examples/jsm/postprocessing/FilmPass.js";
-
-// require("three/examples/js/controls/OrbitControls.js");
-// require("three/examples/js/postprocessing/MaskPass");
-// require("three/examples/js/shaders/CopyShader");
-// require("three/examples/js/shaders/FilmShader.js");
-// require("three/examples/js/shaders/ConvolutionShader");
-// require("three/examples/js/shaders/LuminosityHighPassShader");
+import { FXAAShader } from "three/examples/jsm/shaders/FXAAShader.js";
+import { OrbitControls } from "three/examples/jsm/controls/OrbitControls.js";
 
 class World {
   constructor(init) {
     this.env = env;
 
     this.game = init.game;
+    this.ease = new Ease();
 
     this.observe();
     this.setupScene();
@@ -31,7 +27,12 @@ class World {
     this.setupComposer();
     this.setupGrid();
 
+    this.brightnessValue = 0;
+    this.rgbAmount = 0;
+
+    this.cameraLiftBase = 3.25;
     this.cameraLift = 0;
+    this.cameraLiftEnd = 25;
   }
 
   observe() {
@@ -43,29 +44,27 @@ class World {
   }
 
   smallFlash() {
-    this.brightnessValue = 0.03;
+    this.brightnessValue = 0.05;
+    this.rgbAmount = 0.015;
   }
 
   endTick(e) {
     this.brightnessValue = e.prog * 0.75;
-    this.cameraLift = 3 + e.prog * 100;
+    this.rgbAmount = e.prog * 0.05;
+    this.cameraLift =
+      this.cameraLiftBase +
+      this.ease.inOutExpo(e.prog, 0, 1, 1) * this.cameraLiftEnd;
   }
 
   playReset() {
     this.brightnessValue = 0;
-    this.cameraLift = 3;
-
-    // this.cameraCurrent.copy(this.game.activeHero.mesh.position);
-    // this.cameraTarget.copy(this.game.activeHero.mesh.position);
-    // this.cameraCurrent.y += 100;
-    // this.cameraTarget.y += 100;
-    // this.cameraLookAtCurrent.copy(this.game.activeHero.mesh.position);
-    // this.cameraLookAtTarget.copy(this.game.activeHero.mesh.position);
+    this.rgbAmount = 0;
+    this.cameraLift = this.cameraLiftBase;
 
     this.cameraCurrent.set(0, 0, 0);
     this.cameraTarget.set(0, 0, 0);
-    this.cameraCurrent.y += 100;
-    this.cameraTarget.y += 100;
+    this.cameraCurrent.y += this.cameraLiftEnd;
+    this.cameraTarget.y += this.cameraLiftEnd;
     this.cameraLookAtCurrent.set(0, 0, 0);
     this.cameraLookAtTarget.set(0, 0, 0);
   }
@@ -81,6 +80,7 @@ class World {
     this.renderer = new THREE.WebGLRenderer({
       //antialias: true,
       precision: "highp",
+      powerPreference: "high-performance",
     });
     this.renderer.autoClear = false;
     this.renderer.shadowMap.enabled = true;
@@ -97,7 +97,7 @@ class World {
     this.cameraLookAtCurrent = new THREE.Vector3();
     this.cameraLookAtTarget = new THREE.Vector3();
 
-    // this.orbit = new THREE.OrbitControls(this.camera, this.game.dom.container);
+    // this.orbit = new OrbitControls(this.camera, this.game.dom.container);
     // this.orbit.enableDamping = true;
     // this.orbit.dampingFactor = 0.2;
     // this.orbit.enableKeys = false;
@@ -113,7 +113,6 @@ class World {
     this.composer.addPass(this.renderPass);
 
     this.brightnessPass = new ShaderPass(BrightnessContrastShader);
-    this.brightnessValue = 0;
     this.brightnessPass.uniforms["brightness"].value = 0;
     this.brightnessPass.uniforms["contrast"].value = 0;
     this.brightnessPass.renderToScreen = false;
@@ -136,41 +135,51 @@ class World {
 
     // noiseIntensity, scanlinesIntensity, scanlinesCount, grayscale
     this.filmPass = new FilmPass(0.15, 0.5, 2048, false);
-    this.filmPass.renderToScreen = true;
+    this.filmPass.renderToScreen = false;
     this.composer.addPass(this.filmPass);
+
+    this.fxaaPass = new ShaderPass(FXAAShader);
+    this.fxaaPass.renderToScreen = true;
+    this.composer.addPass(this.fxaaPass);
   }
 
   setupGrid() {
-    // this.gridHelper = new THREE.GridHelper(100, 100, 0xffffff, 0x666666);
-    // this.gridHelper.material.transparent = true;
-    // this.gridHelper.material.opacity = 0.2;
-    // this.scene.add(this.gridHelper);
+    this.gridHelper = new THREE.GridHelper(100, 100, 0xffffff, 0xffffff);
+    this.gridHelper.material.transparent = true;
+    this.gridHelper.material.opacity = 0.05;
+    this.scene.add(this.gridHelper);
   }
 
   update() {
-    //this.orbit.update();
-    if (this.game.activeHero && this.game.stateManager.current === "play") {
-      this.cameraTarget.copy(this.game.activeHero.mesh.position);
-      //this.cameraTarget.y = 3;
-      this.cameraTarget.y = this.cameraLift;
-      this.cameraTarget.z += 0;
+    if (this.orbit) {
+      this.orbit.update();
+    } else {
+      if (this.game.activeHero && this.game.stateManager.current === "play") {
+        this.cameraTarget.copy(this.game.activeHero.mesh.position);
+        this.cameraTarget.y = this.cameraLift;
+        this.cameraTarget.z += 0;
 
-      this.cameraLookAtTarget.copy(this.game.activeHero.mesh.position);
+        this.cameraLookAtTarget.copy(this.game.activeHero.mesh.position);
 
-      let lerpVal = 1 - Math.exp(-0.15 * this.game.time.dtn);
-      this.cameraCurrent.lerp(this.cameraTarget, lerpVal);
-      this.cameraLookAtCurrent.lerp(this.cameraLookAtTarget, lerpVal);
+        let lerpVal = 1 - Math.exp(-0.1 * this.game.time.dtn);
+        this.cameraCurrent.lerp(this.cameraTarget, lerpVal);
+        this.cameraLookAtCurrent.lerp(this.cameraLookAtTarget, lerpVal);
 
-      this.camera.position.copy(this.cameraCurrent);
-      this.camera.lookAt(this.cameraLookAtCurrent);
+        this.camera.position.copy(this.cameraCurrent);
+        this.camera.lookAt(this.cameraLookAtCurrent);
+      }
     }
 
-    this.rgbPass.uniforms["amount"].value =
-      0.0008 + Math.sin(Date.now() * 0.003) * 0.0008;
+    if (!this.game.isEnding) {
+      if (this.rgbAmount > 0) {
+        this.rgbAmount -= 0.001 * this.game.time.dtn;
+        if (this.rgbAmount < 0) {
+          this.rgbAmount = 0;
+        }
+      }
+    }
+    this.rgbPass.uniforms["amount"].value = this.rgbAmount;
     this.rgbPass.uniforms["angle"].value -= 0.1 * this.game.time.dtn;
-    //this.bloomPass.strength = 0.5 + Math.sin(Date.now() * 0.003) * 0.5;
-    //this.bloomPass.radius = 1 + Math.sin(Date.now() * 0.003) * 1;
-    //this.bloomPass.radius = 0.5 - Math.sin(Date.now() * 0.003) * 0.25;
 
     if (!this.game.isEnding) {
       if (this.brightnessValue > 0) {
@@ -201,6 +210,11 @@ class World {
     this.composer.setSize(e.resolution.x * e.dpr, e.resolution.y * e.dpr);
 
     this.filmPass.uniforms.sCount.value = e.resolution.y * 2;
+
+    this.fxaaPass.material.uniforms["resolution"].value.x =
+      1 / (e.resolution.x * e.dpr);
+    this.fxaaPass.material.uniforms["resolution"].value.y =
+      1 / (e.resolution.y * e.dpr);
   }
 
   onGameAnimate() {

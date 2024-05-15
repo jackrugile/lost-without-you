@@ -1,3 +1,13 @@
+import soundFireflyCollect from "/src/assets/sounds/firefly-collect.mp3";
+import soundClick from "/src/assets/sounds/click.mp3";
+import soundIntro from "/src/assets/sounds/intro.mp3";
+import soundDeath from "/src/assets/sounds/death.mp3";
+import soundUnite from "/src/assets/sounds/unite.mp3";
+import soundZoey from "/src/assets/sounds/zoey.mp3";
+import soundMary from "/src/assets/sounds/mary.mp3";
+import soundSwitch from "/src/assets/sounds/switch.mp3";
+import soundMusic from "/src/assets/sounds/music.mp3";
+
 import env from "./env.js";
 import Calc from "./utils/calc";
 import Ease from "./utils/ease";
@@ -184,41 +194,41 @@ class Game {
   setupSounds() {
     this.sounds = {
       fireflyCollect: new Howl({
-        src: ["src/assets/sounds/firefly-collect.mp3"],
+        src: [soundFireflyCollect],
         volume: 1,
         rate: 1.5,
       }),
       button: new Howl({
-        src: ["src/assets/sounds/click.mp3"],
+        src: [soundClick],
         volume: 0.9,
         rate: 2,
       }),
       levelIntro: new Howl({
-        src: ["src/assets/sounds/intro.mp3"],
+        src: [soundIntro],
         volume: 1,
       }),
       death: new Howl({
-        src: ["src/assets/sounds/death.mp3"],
+        src: [soundDeath],
         volume: 0.15,
       }),
       unite: new Howl({
-        src: ["src/assets/sounds/unite.mp3"],
+        src: [soundUnite],
         volume: 0.1,
       }),
       zoey: new Howl({
-        src: ["src/assets/sounds/zoey.mp3"],
+        src: [soundZoey],
         volume: 1,
       }),
       mary: new Howl({
-        src: ["src/assets/sounds/mary.mp3"],
+        src: [soundMary],
         volume: 0.2,
       }),
       switch: new Howl({
-        src: ["src/assets/sounds/switch.mp3"],
+        src: [soundSwitch],
         volume: 0.4,
       }),
       music: new Howl({
-        src: ["src/assets/sounds/music.mp3"],
+        src: [soundMusic],
         volume: 0.3,
         pool: 1,
         loop: true,

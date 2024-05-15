@@ -23,8 +23,8 @@ class ParticleSystem {
     this.color = new THREE.Color();
 
     this.texture = this.generateTexture();
-    this.size = 0.25;
-    this.base = 12;
+    this.size = 0.15;
+    this.base = 10;
     this.count = this.base * this.base * this.base;
     this.geometry = new THREE.BufferGeometry();
     this.parts = [];
@@ -47,7 +47,7 @@ class ParticleSystem {
     );
 
     for (let i = 0; i < this.count; i++) {
-      let size = this.calc.rand(0.02, 0.05);
+      let size = this.calc.rand(0.02, 0.075) * this.game.dpr;
       this.parts.push({
         offset: 0,
         position: new THREE.Vector3(
@@ -65,8 +65,9 @@ class ParticleSystem {
         b: 1,
         a: 0,
         life: 2,
-        decay: this.calc.rand(0.06, 0.09),
-        delay: this.calc.randInt(0, 240),
+        decay: this.calc.rand(0.03, 0.09),
+        // delay: this.calc.randInt(0, 240),
+        delay: 0,
         firstRun: true,
       });
     }
@@ -98,7 +99,8 @@ class ParticleSystem {
         }
       `,
       blending: THREE.AdditiveBlending,
-      depthTest: false,
+      depthTest: true,
+      depthWrite: false,
       transparent: true,
     });
 
@@ -232,7 +234,8 @@ class ParticleSystem {
             Math.cos(newAngle) * newMag + this.hero.mesh.position.x;
           part.position.y =
             this.calc.rand(-this.size / 2, this.size / 2) +
-            this.hero.mesh.position.y;
+            this.hero.mesh.position.y +
+            this.hero.height / 2;
           part.position.z =
             Math.sin(newAngle) * newMag + this.hero.mesh.position.z;
 
