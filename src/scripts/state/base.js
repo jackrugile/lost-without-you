@@ -29,6 +29,7 @@ class BaseState {
 
   deactivate() {
     this.isActive = false;
+    this.game.clearInputs();
     this.dom.state.classList.remove("state-active");
     this.env.eventful.trigger(`${this.name}-state-deactivate`);
   }

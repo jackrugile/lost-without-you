@@ -20,18 +20,19 @@ class Hero {
 
     this.life = 1;
     this.decay = 0.00175;
+    // this.decay = 0;
 
     this.acceleration = new THREE.Vector3();
     this.velocity = new THREE.Vector3();
-    this.accelerationGain = 0.01;
-    this.velocityMax = 0.3;
+    this.accelerationGain = 0.0125;
+    this.velocityMax = 0.1;
     this.velocityFriction = 0.85;
 
     this.lightPositionCurrent = new THREE.Vector3();
     this.lightPositionTarget = new THREE.Vector3();
-    this.lightDistanceBase = 5;
-    this.lightDistanceCurrent = 5;
-    this.lightDistanceTarget = 5;
+    this.lightDistanceBase = 7;
+    this.lightDistanceCurrent = 7;
+    this.lightDistanceTarget = 7;
     this.light1Intensity = 0.75;
     this.light2Intensity = 0.25;
 
@@ -51,12 +52,11 @@ class Hero {
     this.width = 0.3;
     this.height = 0.3;
     this.depth = 0.3;
-    // this.geometry = new THREE.BoxBufferGeometry(
-    //   this.width,
-    //   this.height,
-    //   this.depth
-    // );
-    this.geometry = new THREE.BoxGeometry(this.width, this.height, this.depth);
+    this.geometry = new THREE.BoxBufferGeometry(
+      this.width,
+      this.height,
+      this.depth
+    );
     this.material = new THREE.MeshPhongMaterial({
       color: new THREE.Color(`hsl(${this.hue}, 80%, 50%)`),
       specular: new THREE.Color(`hsl(${this.hue}, 80%, 75%)`),
@@ -70,8 +70,7 @@ class Hero {
     this.mesh.bbox = new THREE.Box3();
     this.game.world.scene.add(this.mesh);
 
-    // this.lifeGeometryBack = new THREE.PlaneBufferGeometry(0.3, 0.015);
-    this.lifeGeometryBack = new THREE.PlaneGeometry(0.3, 0.015);
+    this.lifeGeometryBack = new THREE.PlaneBufferGeometry(0.3, 0.015);
     this.lifeGeometryBack.applyMatrix(
       new THREE.Matrix4().makeRotationX(-Math.PI / 2)
     );
@@ -87,8 +86,7 @@ class Hero {
     );
     this.game.world.scene.add(this.lifeMeshBack);
 
-    // this.lifeGeometry = new THREE.PlaneBufferGeometry(0.3, 0.015);
-    this.lifeGeometry = new THREE.PlaneGeometry(0.3, 0.015);
+    this.lifeGeometry = new THREE.PlaneBufferGeometry(0.3, 0.015);
     this.lifeGeometry.applyMatrix(
       new THREE.Matrix4().makeRotationX(-Math.PI / 2)
     );
@@ -156,7 +154,6 @@ class Hero {
 
     if (!this.game.isEnding) {
       this.velocity.x += this.acceleration.x * this.game.time.dtn;
-      // this.velocity.x *= this.velocityFriction;
       this.velocity.x +=
         (0 - this.velocity.x) *
         (1 - Math.exp(-(1 - this.velocityFriction) * this.game.time.dtn));
@@ -210,7 +207,6 @@ class Hero {
 
     if (!this.game.isEnding) {
       this.velocity.z += this.acceleration.z * this.game.time.dtn;
-      // this.velocity.z *= this.velocityFriction;
       this.velocity.z +=
         (0 - this.velocity.z) *
         (1 - Math.exp(-(1 - this.velocityFriction) * this.game.time.dtn));
@@ -316,8 +312,7 @@ class Hero {
 
   spawnGhost() {
     //this.ghostGeometry = new THREE.BoxBufferGeometry(this.width, this.height, this.depth);
-    // this.ghostGeometry = new THREE.SphereBufferGeometry(this.width, 32, 32);
-    this.ghostGeometry = new THREE.SphereGeometry(this.width, 32, 32);
+    this.ghostGeometry = new THREE.SphereBufferGeometry(this.width, 32, 32);
     this.ghostMaterial = new THREE.MeshPhongMaterial({
       color: 0xffffff,
       transparent: true,
@@ -346,9 +341,10 @@ class Hero {
     if (this.isActive && this.game.isPlaying && !this.game.isEnding) {
       if (this.life > 0) {
         this.life -= this.decay * this.game.time.dtn;
-        this.lightDistanceTarget = 1 + this.lightDistanceBase * this.life;
-        this.lightDistanceCurrent +=
-          (this.lightDistanceTarget - this.lightDistanceCurrent) * 0.2;
+        this.lightDistanceTarget = 2 + this.lightDistanceBase * this.life;
+        this.lightDistanceCurrent = this.lightDistanceTarget;
+        // this.lightDistanceCurrent +=
+        // (this.lightDistanceTarget - this.lightDistanceCurrent) * 1;
         this.light1.distance = this.lightDistanceCurrent;
         this.light2.distance = this.lightDistanceCurrent;
       } else {
@@ -368,8 +364,9 @@ class Hero {
     this.lifeMesh.position.y += this.height / 2;
     this.lifeMesh.position.z -= 0.23;
     this.lifeMeshScaleTarget = 0.000001 + this.life;
-    this.lifeMeshScaleCurrent +=
-      (this.lifeMeshScaleTarget - this.lifeMeshScaleCurrent) * 0.2;
+    this.lifeMeshScaleCurrent = this.lifeMeshScaleTarget;
+    // this.lifeMeshScaleCurrent +=
+    //   (this.lifeMeshScaleTarget - this.lifeMeshScaleCurrent) * 0.2;
     this.lifeMesh.position.x -= (0.3 - 0.3 * this.lifeMeshScaleCurrent) / 2;
     this.lifeMesh.scale.set(this.lifeMeshScaleCurrent, 1, 1);
   }

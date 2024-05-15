@@ -100,23 +100,21 @@ class Game {
 
   setupStates() {
     this.stateManager = new StateManager(this);
-    //this.stateManager.set('play');
     this.stateManager.set("menu");
   }
 
   setupFireflies() {
-    // this.fireflyGeometry = new THREE.SphereBufferGeometry(0.01, 0.01, 72, 72);
-    this.fireflyGeometry = new THREE.SphereGeometry(0.01, 0.01, 72, 72);
+    this.fireflyGeometry = new THREE.SphereBufferGeometry(0.01, 0.01, 72, 72);
     this.fireflyMaterial = new THREE.MeshBasicMaterial({
       color: 0xffffff,
     });
 
     let canvas = document.createElement("canvas");
     let ctx = canvas.getContext("2d");
-    let size = 512;
+    let size = 256;
     canvas.width = size;
     canvas.height = size;
-    let glow_gradient = ctx.createRadialGradient(
+    let glowGradient = ctx.createRadialGradient(
       size / 2,
       size / 2,
       0,
@@ -128,9 +126,9 @@ class Game {
     for (let i = 0; i < steps; i++) {
       let p = i / (steps - 1);
       let a = this.calc.map(this.ease.outExpo(p, 0, 1, 1), 0, 1, 1, 0);
-      glow_gradient.addColorStop(p, `hsla(60, 100%, 40%, ${a})`);
+      glowGradient.addColorStop(p, `hsla(60, 100%, 40%, ${a})`);
     }
-    ctx.fillStyle = glow_gradient;
+    ctx.fillStyle = glowGradient;
     ctx.beginPath();
     ctx.arc(size / 2, size / 2, size / 2, 0, Math.PI * 2);
     ctx.fill();
@@ -145,8 +143,7 @@ class Game {
   }
 
   setupLevels() {
-    // this.wallGeometry = new THREE.BoxBufferGeometry(1, 1, 1);
-    this.wallGeometry = new THREE.BoxGeometry(1, 1, 1);
+    this.wallGeometry = new THREE.BoxBufferGeometry(1, 1, 1);
     this.wallMaterial = new THREE.MeshPhongMaterial({
       color: 0x666666,
       specular: 0x666666,
@@ -161,6 +158,10 @@ class Game {
     this.keys = new Keys();
 
     this.input = {
+      enter: {
+        pressed: false,
+        pressedOnce: false,
+      },
       up: {
         pressed: false,
         pressedOnce: false,
@@ -265,13 +266,8 @@ class Game {
     }
 
     this.aspect = this.resolution.x / this.resolution.y;
-    //this.dpr = window.devicePixelRatio > 1 ? 2 : 1;
+    // this.dpr = window.devicePixelRatio > 1 ? 2 : 1;
     this.dpr = 1;
-    if (window.devicePixelRatio > 1) {
-      document.body.classList.add("retina");
-    } else {
-      document.body.classList.remove("retina");
-    }
 
     this.dom.container.style.width = `${this.resolution.x}px`;
     this.dom.container.style.height = `${this.resolution.y}px`;
@@ -320,12 +316,17 @@ class Game {
     this.env.eventful.trigger("game-update");
   }
 
-  postUpdate() {
-    this.env.eventful.trigger("game-post-update");
+  clearInputs() {
+    this.input.enter.pressedOnce = false;
     this.input.up.pressedOnce = false;
     this.input.down.pressedOnce = false;
     this.input.left.pressedOnce = false;
     this.input.right.pressedOnce = false;
+  }
+
+  postUpdate() {
+    this.env.eventful.trigger("game-post-update");
+    this.clearInputs();
   }
 
   animate() {

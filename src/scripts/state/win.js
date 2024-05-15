@@ -17,14 +17,16 @@ class WinState extends BaseState {
   }
 
   onClick() {
+    this.nextState();
+  }
+
+  nextState() {
     this.game.sounds.button.play();
     this.game.stateManager.set("menu");
   }
 
   activate() {
     super.activate();
-    this.tick = 0;
-    this.tickMax = 60 * 5;
 
     // set level corresponding dialogue
     let newTitle = null;
@@ -91,10 +93,10 @@ class WinState extends BaseState {
     if (!this.isActive) {
       return;
     }
-    // this.tick++;
-    // if(this.tick === this.tickMax) {
-    //   this.game.stateManager.set('menu');
-    // }
+
+    if (this.game.input.enter.pressedOnce) {
+      this.nextState();
+    }
   }
 }
 

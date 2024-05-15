@@ -12,10 +12,15 @@ body
   color: #fff
   font-family: 'Dosis', sans-serif
 
-.retina canvas
-  image-rendering: auto
-  image-rendering: crisp-edges
-  image-rendering: pixelated
+canvas
+  pointer-events: none
+
+:focus
+  outline: none
+
+:focus-visible
+  outline: 2px solid #fff
+  outline-offset: 4px
 
 //-------------------------------------------------
 // TYPOGRAPHY
@@ -53,6 +58,7 @@ h2
   top: 0
   transform-origin: 0% 0%
   width: 1920px
+  z-index: 1
 
 .state
   align-items: center
@@ -104,37 +110,41 @@ h2
     font-weight: 500
     text-decoration: none
     transition: color 200ms
-    &:hover
+    &:focus-visible
       color: hsl($hero-a-hue, $hero-sat, $hero-lit)
+    @media (hover: hover)
+      &:hover
+        color: hsl($hero-a-hue, $hero-sat, $hero-lit)
   a:last-child
-    &:hover
+    &:focus-visible
       color: hsl($hero-b-hue, $hero-sat, $hero-lit)
+    @media (hover: hover)
+      &:hover
+        color: hsl($hero-b-hue, $hero-sat, $hero-lit)
 
 .state-menu-levels
+  align-items: flex-start
   display: flex
+  gap: 40px
 
 .state-menu-level
-  background: none
-  border: none
   display: block
-  font-family: inherit
-  margin-right: 40px
-  &:last-child
-    margin-right: 0
 
 .state-menu-level-title
   align-items: center
+  background: none
   border: 2px solid #444
   color: #444
   cursor: not-allowed
   display: flex
+  font-family: inherit
   font-size: 35px
   font-weight: 500
   height: 80px
   line-height: 1
   justify-content: center
   text-align: center
-  transition: all 200ms
+  transition: border-color 200ms, box-shadow 200ms, transform 200ms
   width: 80px
   .state-menu-level-available &
     border-color: #fff
@@ -145,11 +155,17 @@ h2
     border-color: #fff
     color: #000
     cursor: pointer
-  .state-menu-level-available:hover &,
-  .state-menu-level-beaten:hover &
+  .state-menu-level-available &:focus-visible,
+  .state-menu-level-beaten &:focus-visible
     border-color: #fff
     box-shadow: 0 0 0 8px hsla(0, 0%, 100%, 0.1)
     transform: scale(1.1)
+  @media (hover: hover)
+    .state-menu-level-available &:hover,
+    .state-menu-level-beaten &:hover
+      border-color: #fff
+      box-shadow: 0 0 0 8px hsla(0, 0%, 100%, 0.1)
+      transform: scale(1.1)
 
 .state-menu-level-time
   color: #fff

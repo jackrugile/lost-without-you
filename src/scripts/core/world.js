@@ -158,23 +158,8 @@ class World {
       this.cameraLookAtTarget.copy(this.game.activeHero.mesh.position);
 
       let lerpVal = 1 - Math.exp(-0.15 * this.game.time.dtn);
-
       this.cameraCurrent.lerp(this.cameraTarget, lerpVal);
       this.cameraLookAtCurrent.lerp(this.cameraLookAtTarget, lerpVal);
-
-      // this.cameraCurrent.x +=
-      //   (this.cameraTarget.x - this.cameraCurrent.x) * lerpVal;
-      // this.cameraCurrent.y +=
-      //   (this.cameraTarget.y - this.cameraCurrent.y) * lerpVal;
-      // this.cameraCurrent.z +=
-      //   (this.cameraTarget.z - this.cameraCurrent.z) * lerpVal;
-
-      // this.cameraLookAtCurrent.x +=
-      //   (this.cameraLookAtTarget.x - this.cameraLookAtCurrent.x) * lerpVal;
-      // this.cameraLookAtCurrent.y +=
-      //   (this.cameraLookAtTarget.y - this.cameraLookAtCurrent.y) * lerpVal;
-      // this.cameraLookAtCurrent.z +=
-      //   (this.cameraLookAtTarget.z - this.cameraLookAtCurrent.z) * lerpVal;
 
       this.camera.position.copy(this.cameraCurrent);
       this.camera.lookAt(this.cameraLookAtCurrent);

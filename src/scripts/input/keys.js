@@ -6,11 +6,13 @@ class Keys {
     this.game = game;
 
     this.keyWatch = {
-      up: [87, 38], // w, up
-      down: [83, 40], // s, down
-      left: [65, 37], // a, left
-      right: [68, 39], // d, right
+      enter: [13], // enter
+      up: [87, 38], // w, up arrow
+      down: [83, 40], // s, down arrow
+      left: [65, 37], // a, left arrow
+      right: [68, 39], // d, right arrow
     };
+    this.keyWatchEntries = Object.entries(this.keyWatch);
 
     this.observe();
   }
@@ -21,34 +23,18 @@ class Keys {
   }
 
   onKeydown(e) {
-    let key = e.which;
-    if (this.keyWatch.up.indexOf(key) > -1) {
-      this.env.eventful.trigger("key-pressed", { input: "up" });
-    }
-    if (this.keyWatch.down.indexOf(key) > -1) {
-      this.env.eventful.trigger("key-pressed", { input: "down" });
-    }
-    if (this.keyWatch.left.indexOf(key) > -1) {
-      this.env.eventful.trigger("key-pressed", { input: "left" });
-    }
-    if (this.keyWatch.right.indexOf(key) > -1) {
-      this.env.eventful.trigger("key-pressed", { input: "right" });
+    for (const [key, value] of this.keyWatchEntries) {
+      if (value.indexOf(e.which) > -1) {
+        this.env.eventful.trigger("key-pressed", { input: key });
+      }
     }
   }
 
   onKeyup(e) {
-    let key = e.which;
-    if (this.keyWatch.up.indexOf(key) > -1) {
-      this.env.eventful.trigger("key-released", { input: "up" });
-    }
-    if (this.keyWatch.down.indexOf(key) > -1) {
-      this.env.eventful.trigger("key-released", { input: "down" });
-    }
-    if (this.keyWatch.left.indexOf(key) > -1) {
-      this.env.eventful.trigger("key-released", { input: "left" });
-    }
-    if (this.keyWatch.right.indexOf(key) > -1) {
-      this.env.eventful.trigger("key-released", { input: "right" });
+    for (const [key, value] of this.keyWatchEntries) {
+      if (value.indexOf(e.which) > -1) {
+        this.env.eventful.trigger("key-released", { input: key });
+      }
     }
   }
 }

@@ -15,14 +15,16 @@ class InstructionsState extends BaseState {
   }
 
   onClick() {
+    this.nextState();
+  }
+
+  nextState() {
     this.game.sounds.button.play();
     this.game.stateManager.set("play");
   }
 
   activate() {
     super.activate();
-    this.tick = 0;
-    this.tickMax = 60 * 20;
   }
 
   update() {
@@ -30,10 +32,10 @@ class InstructionsState extends BaseState {
     if (!this.isActive) {
       return;
     }
-    // this.tick++;
-    // if(this.tick === this.tickMax) {
-    //   this.game.stateManager.set('play');
-    // }
+
+    if (this.game.input.enter.pressedOnce) {
+      this.nextState();
+    }
   }
 }
 

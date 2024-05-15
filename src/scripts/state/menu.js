@@ -7,7 +7,7 @@ class MenuState extends BaseState {
 
   setupDOM() {
     super.setupDOM();
-    this.dom.levels = document.querySelectorAll(".state-menu-level");
+    this.dom.levels = document.querySelectorAll(".state-menu-level-title");
 
     this.dom.level1 = document.querySelector(".state-menu-level-1");
     this.dom.level2 = document.querySelector(".state-menu-level-2");

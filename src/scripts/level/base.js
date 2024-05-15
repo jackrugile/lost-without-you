@@ -50,11 +50,10 @@ class BaseLevel {
   }
 
   setupGround() {
-    // this.groundGeometry = new THREE.PlaneBufferGeometry(
-    //   this.mazeRows,
-    //   this.mazeCols
-    // );
-    this.groundGeometry = new THREE.PlaneGeometry(this.mazeRows, this.mazeCols);
+    this.groundGeometry = new THREE.PlaneBufferGeometry(
+      this.mazeRows,
+      this.mazeCols
+    );
     this.groundGeometry.applyMatrix(
       new THREE.Matrix4().makeRotationX(-Math.PI / 2)
     );
@@ -125,12 +124,8 @@ class BaseLevel {
     // });
 
     this.walls2.forEach((wall) => {
-      // let mesh = new THREE.Mesh(
-      //   new THREE.BoxBufferGeometry(wall.width, wall.height, wall.depth),
-      //   this.game.wallMaterial
-      // );
       let mesh = new THREE.Mesh(
-        new THREE.BoxGeometry(wall.width, wall.height, wall.depth),
+        new THREE.BoxBufferGeometry(wall.width, wall.height, wall.depth),
         this.game.wallMaterial
       );
       mesh.castShadow = true;
